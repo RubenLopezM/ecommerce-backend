@@ -15,5 +15,6 @@ public interface CartService {
     public CartOutputDTO createCart(CartInputDTO cartInputDTO);
     public CartOutputDTO getCartDetails(Long id);
     public void deleteCard(Long id);
+    public void deleteCardByDate();
 
 }

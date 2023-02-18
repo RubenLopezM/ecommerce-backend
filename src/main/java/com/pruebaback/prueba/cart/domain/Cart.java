@@ -2,19 +2,28 @@ package com.pruebaback.prueba.cart.domain;
 
 import com.pruebaback.prueba.product.domain.Product;
 import jakarta.persistence.*;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.math.BigDecimal;
+
+import org.apache.commons.logging.Log;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+
 import java.util.*;
 
 @Entity
 @Table(name = "carts")
 public class Cart {
 
+    private static Log log = LogFactory.getLog(Cart.class);
     @Id
     @GeneratedValue
     private Long id;
-    private Date date_order = new Date();
+    @CreationTimestamp
+    private Date date_order;
     private Date scheduled_delivery_date;
+
     private boolean has_discount ;
     private Double totalPrice;
     @ManyToMany
@@ -92,5 +101,7 @@ public class Cart {
             products.add(product);
         }
     }
+
+
 
 }

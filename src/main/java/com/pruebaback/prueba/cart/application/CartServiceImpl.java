@@ -10,13 +10,17 @@ import com.pruebaback.prueba.product.domain.Product;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@EnableScheduling
 public class CartServiceImpl implements CartService{
 
     @Autowired
@@ -61,6 +65,28 @@ public class CartServiceImpl implements CartService{
         Cart cart = this.findCartbyId(id);
         cartRepo.delete(cart);
     }
+
+
+
+    @Override
+    @Scheduled(fixedRate = 10000)
+    public void deleteCardByDate() {
+
+        List<Cart>  carts = cartRepo.findAll();
+        if (carts.size()>0) {
+            for (Cart cart: carts){
+                if (this.checkCartDate(cart)){
+                    cartRepo.delete(cart);
+                }
+            }
+        }
+    }
+
+    private boolean checkCartDate(Cart cart){
+        Timestamp timestamp= new Timestamp(System.currentTimeMillis());
+        return  (((timestamp.getTime() - cart.getDate_order().getTime())/1000)/60>10);
+    }
+
 
     private Cart convertToCart(CartInputDTO cartInputDTO){
         Cart cart = new Cart();
