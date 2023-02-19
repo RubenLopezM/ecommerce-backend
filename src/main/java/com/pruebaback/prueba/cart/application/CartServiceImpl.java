@@ -41,7 +41,6 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    @Cacheable(value = "cartsCache")
     public Cart findCartbyId(Long id) {
         Cart cart = cartRepo.findById(id).orElseThrow(()-> new CartNotFoundException("This cart was not found"));
         return cart;
